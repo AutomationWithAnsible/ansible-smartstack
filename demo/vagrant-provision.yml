@@ -63,17 +63,6 @@
         mode=0755
       when: inventory_hostname == "demo1" or inventory_hostname == "demo2"
 
-    - name: Enable superapp service
-      service: 
-        name=superapp
-        state=restarted
-      when: inventory_hostname == "demo1" or inventory_hostname == "demo2"
-
-    - name: Enable superapp service
-      service: 
-        name=nginx
-        state=started
-      when: inventory_hostname == "demo3"
 
     - name: Install demo packages
       apt:
@@ -92,16 +81,11 @@
     - name : Configure postgresql hba.conf
       lineinfile: 
         dest=/etc/postgresql/9.1/main/pg_hba.conf
-        regexp='^host  all  all" 0.0.0.0/0 md5'
+        insertafter="EOF"
         line="host  all  all 0.0.0.0/0 md5"
       when: "'postgresql' in packages_to_install"
 
-    - name : Service postgresql
-      service: 
-        name=postgresql
-        state=restarted
-      register: postgresql_conf
-      when: "'postgresql' in packages_to_install and postgresql_conf | changed"
+
 
     - name: Create postgresql db
       postgresql_db: 
@@ -116,6 +100,31 @@
         password=superapp
       sudo_user: postgres
       when: "'postgresql' in packages_to_install"
+
+    - name: Copy Nginx config
+      copy:
+        src="nginx_default.conf"
+        dest="/etc/nginx/sites-available/default"
+      when: inventory_hostname == "demo3"
+
+    - name : Service postgresql
+      service: 
+        name=postgresql
+        state=restarted
+      register: postgresql_conf
+      when: "'postgresql' in packages_to_install and postgresql_conf | changed"
+
+    - name: Enable Nginx service
+      service: 
+        name=nginx
+        state=started
+      when: inventory_hostname == "demo3"
+
+    - name: Enable superapp service
+      service: 
+        name=superapp
+        state=started
+      when: inventory_hostname == "demo1" or inventory_hostname == "demo2"
 
   roles :
     - ansible-smartstack
