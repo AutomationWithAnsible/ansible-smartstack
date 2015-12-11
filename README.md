@@ -69,26 +69,37 @@ Once you define your services you can give the path of your service file as a va
 ## Example Playbook
 
 Head to demo directoy
-Requires Vagrant 1.5 +
+Requires Vagrant 1.5 + and ansible 1.8+
 
-```vagrant up``` Two vagrant images will be created 
+```vagrant up``` 3 vagrant images will be created 
 
 demo1 (192.168.56.150)
 - postgresql server
+- SuperApp
 - nerv
 - serf
 
 demo2 (192.168.56.151)
-- postgresql client
+- superApp
 - synapse
 - serf
 - haproxy
+
+demo3 (192.168.56.152)
+- nginx
+- synapse
+- serf
+- haproxy
+
+### Check superApp
+http://192.168.56.152 and refersh a couple of times
 
 ###To check serf members
 From demo1 or demo2 type  ```serf members```
 
 ###To check haproxy stats page
-http://192.168.56.151:3212/
+http://192.168.56.151:3212/ on demo2
+http://192.168.56.152:3212/ on demo3
 
 ### Simulate failure serf failure
 On demo1 type ```sudo service serf stop``` then on demo2 ```serf members```
@@ -97,6 +108,9 @@ Enable back serf on demo1 by typing ```sudo service serf stop```
 
 ### Simulate postgresql faliure 
 on demo2  ```sudo service postgresql stop``` then head to http://192.168.56.151:3212/
+
+### Simulate Applocation faliure 
+on demo2  ```sudo service superapp stop``` then head to http://192.168.56.151:3212/
 
 ## License
 MIT
