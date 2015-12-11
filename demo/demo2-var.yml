@@ -16,6 +16,8 @@ ip_match_rules                          :
 #Since this is a demo we will make a list of packages to install
 packages_to_install                     : 
                                           - "python-psycopg2"
+                                          - "vim"
+                                          - "curl"
 
 ###
 ruby_install                            : True

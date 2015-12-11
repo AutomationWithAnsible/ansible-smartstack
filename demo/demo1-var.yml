@@ -14,6 +14,8 @@ ip_match_rules                          :
 packages_to_install                     : 
                                            - "postgresql"
                                            - "python-psycopg2"
+                                           - "vim"
+                                           - "curl"
 ruby_install                            : True
 
 ## App config
